@@ -21,7 +21,20 @@ data "aws_ami" "ubuntu" {
 resource "aws_instance" "chef_server" {
   instance_type = "t2.micro"
   ami           = "${data.aws_ami.ubuntu.id}"
-
-  tags = ${var.Tags}
+  key_name      = "udacity"
+  tags = "${var.Tags}"
+  provisioner "remote-exec" {
+    inline = [
+          "apt-get update && apt-get install -y wget",
+          "wget https://packages.chef.io/files/stable/chef-server/12.17.33/ubuntu/14.04/chef-server-core_12.17.33-1_amd64.deb",
+          "dpkg -i chef-server-core_12.17.33-1_amd64.deb",
+          "chef-server-ctl reconfigure"
+        ]
+    connection {
+      type     = "ssh"
+      user     = "ubuntu"
+      private_key = "${file("${var.udacity_key}")}"
+    }
+  } 
 
 }

@@ -11,3 +11,9 @@ variable "Tags" {
     Name = "Chef Server"
   }
 }
+
+variable "udacity_key" {
+  type = "string"
+  description = "Local Path to pem file"
+  default = "~/.ssh/udacity.pem"
+}
